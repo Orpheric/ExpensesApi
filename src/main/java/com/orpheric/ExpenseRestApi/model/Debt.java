@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class Debt {
@@ -22,8 +21,10 @@ public class Debt {
 	private Long id;
 	
 	private String title;
+	
 	@Column(nullable=false)
 	private String creditor;
+	
 	@Column(nullable=false)
 	private LocalDate date;
 	@ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)
