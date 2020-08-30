@@ -3,12 +3,14 @@ package com.orpheric.ExpenseRestApi.service.impl;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.orpheric.ExpenseRestApi.model.User;
 import com.orpheric.ExpenseRestApi.model.Exception.UniquePropertyDuplicatedException;
 import com.orpheric.ExpenseRestApi.repository.UserRepository;
 import com.orpheric.ExpenseRestApi.service.UserService;
 
+@Service
 public class UserServiceImpl implements UserService {
 
 	@Autowired
@@ -46,7 +48,7 @@ public class UserServiceImpl implements UserService {
 		return userRepo.findByLogin(login);
 	}
 
-	public User updateUserPassword(String login, String newPassword) throws EntityNotFoundException {
+	public User updateUserPasswordWithLogin(String login, String newPassword) throws EntityNotFoundException {
 		// TODO Auto-generated method stub
 		if(login ==null)
 		{
@@ -55,6 +57,29 @@ public class UserServiceImpl implements UserService {
 		else
 		{
 			User user = findUserByLogin(login);
+			if(user==null)
+			{
+				throw new EntityNotFoundException();
+			}
+			else{
+				user.setPassword(newPassword);
+				return userRepo.save(user);
+			}
+
+
+		}
+
+	}
+
+	public User updateUserPasswordWithId(Long id, String newPassword) throws EntityNotFoundException {
+		// TODO Auto-generated method stub
+		if(id ==null)
+		{
+			return null;	
+		}
+		else
+		{
+			User user =userRepo.findById(id).get();
 			if(user==null)
 			{
 				throw new EntityNotFoundException();
@@ -89,5 +114,27 @@ public class UserServiceImpl implements UserService {
 		}
 		
 	}
+	public void deleteUser(Long id) throws EntityNotFoundException{
+		// TODO Auto-generated method stub
+		if(id==null)
+		{
+			throw new EntityNotFoundException();
+		}
+		else
+		{
+			
+			if( !userRepo.findById(id).isPresent())
+			{
+				throw new EntityNotFoundException();
+			}
+			else
+			{
+				User user =  userRepo.findById(id).get();
+				 userRepo.delete(user);
+			}
+		}
+		
+	}
+
 
 }

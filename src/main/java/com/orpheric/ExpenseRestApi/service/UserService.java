@@ -9,6 +9,8 @@ public interface UserService {
 
 	public User createUser(String phone,String login,String password, String name) throws UniquePropertyDuplicatedException;
 	public User findUserByLogin(String login);
-	public User updateUserPassword(String login,String newPassword) throws EntityNotFoundException;
+	public User updateUserPasswordWithLogin(String login,String newPassword) throws EntityNotFoundException;
+	public User updateUserPasswordWithId(Long id, String newPassword) throws EntityNotFoundException;
 	public void deleteUser(String login) throws EntityNotFoundException;
+	public void deleteUser(Long id) throws EntityNotFoundException;
 }
