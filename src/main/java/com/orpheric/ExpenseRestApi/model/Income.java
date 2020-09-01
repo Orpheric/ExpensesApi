@@ -36,6 +36,15 @@ public class Income {
 		this.amount = amount;
 		this.date = date;
 	}
+	
+
+	public Income(String title, Long amount, LocalDate date, User user) {
+		super();
+		this.title = title;
+		this.amount = amount;
+		this.date = date;
+		this.user = user;
+	}
 
 	public Long getId() {
 		return id;
