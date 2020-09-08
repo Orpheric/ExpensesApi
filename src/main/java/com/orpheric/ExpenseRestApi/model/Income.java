@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 public class Income {
 
@@ -19,12 +21,12 @@ public class Income {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String title;
-	@Column(nullable=false)
 	private Long amount;
 	@Column(nullable= false)
 	private LocalDate date;
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)
-	@JoinColumn(referencedColumnName="id",name="user_id")
+	@JoinColumn(referencedColumnName="id",name="user_id")	
 	private User user;
 	public Income() {
 		// TODO Auto-generated constructor stub

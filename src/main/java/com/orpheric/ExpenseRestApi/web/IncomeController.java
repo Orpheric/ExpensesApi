@@ -67,7 +67,7 @@ public class IncomeController {
 			
 			
 		}
-		return new ResponseEntity<Income>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Income>(HttpStatus.NOT_FOUND);
 		
 		}
 		catch(EntityNotFoundException e)
