@@ -79,12 +79,12 @@ public class UserServiceImpl implements UserService {
 		}
 		else
 		{
-			User user =userRepo.findById(id).get();
-			if(user==null)
+			if( !userRepo.findById(id).isPresent())
 			{
 				throw new EntityNotFoundException();
 			}
 			else{
+				User user = userRepo.findById(id).get();
 				user.setPassword(newPassword);
 				return userRepo.save(user);
 			}
