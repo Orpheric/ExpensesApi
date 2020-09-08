@@ -52,9 +52,10 @@ public class IncomeServiceImpl implements IncomeService {
 	public Income updateUserIncome(Long incomeId, Long amount, String title) throws EntityNotFoundException{
 		// TODO Auto-generated method stub
 
-		Income income = incomeRepo.findById(incomeId).get();
-		if(income!=null)
+		if(incomeRepo.findById(incomeId).isPresent())
 		{
+			Income income = incomeRepo.findById(incomeId).get();
+
 			income.setAmount(amount);
 			income.setTitle(title);
 			return incomeRepo.save(income);
@@ -69,16 +70,20 @@ public class IncomeServiceImpl implements IncomeService {
 	}
 	public void deleteUserIncome(Long incomeId) {
 		// TODO Auto-generated method stub
-		Income income = incomeRepo.findById(incomeId).get();
-		if(income!=null)
+		if(incomeRepo.findById(incomeId).isPresent())
 		{
+			Income income = incomeRepo.findById(incomeId).get();
+
 			incomeRepo.delete(income);
+
+
 		}
 		else
 		{
 			throw new EntityNotFoundException();
 
 		}
+
 
 	}
 	public Income findIncomeById(Long id) {
