@@ -43,7 +43,7 @@ public class ExpenseServiceImpl implements ExpenseService{
 				{
 					Expense expenseCreated = new Expense(title,fee,LocalDate.now(),userRepo.findById(userId).get());
 					//Save balance
-					Long latestBalance = balanceRepo.findTopByOrderByIdDesc().getAmount();
+					Long latestBalance = balanceRepo.findFirstByUserIdOrderByDateDesc(userId).getAmount();
 					Balance balanceUpdated = new Balance(latestBalance-fee,LocalDateTime.now(),userRepo.findById(userId).get());
 					balanceRepo.save(balanceUpdated);
 					return expenseRepo.save(expenseCreated);

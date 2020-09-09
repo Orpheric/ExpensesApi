@@ -50,7 +50,7 @@ public class IncomeServiceImpl implements IncomeService {
 			{
 				Income incomeCreated = new Income(title,amount,LocalDate.now(),userRepo.findById(userId).get());
 				//Save balance
-				Long latestBalance = balanceRepo.findTopByOrderByIdDesc().getAmount();
+				Long latestBalance = balanceRepo.findFirstByUserIdOrderByDateDesc(userId).getAmount();
 				Balance balanceUpdated = new Balance(latestBalance+amount,LocalDateTime.now(),userRepo.findById(userId).get());
 				balanceRepo.save(balanceUpdated);
 				return incomeRepo.save(incomeCreated);
