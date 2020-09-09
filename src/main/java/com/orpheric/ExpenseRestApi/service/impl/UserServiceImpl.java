@@ -1,12 +1,16 @@
 package com.orpheric.ExpenseRestApi.service.impl;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.orpheric.ExpenseRestApi.model.Balance;
 import com.orpheric.ExpenseRestApi.model.User;
 import com.orpheric.ExpenseRestApi.model.Exception.UniquePropertyDuplicatedException;
+import com.orpheric.ExpenseRestApi.repository.BalanceRepository;
 import com.orpheric.ExpenseRestApi.repository.UserRepository;
 import com.orpheric.ExpenseRestApi.service.UserService;
 
@@ -15,6 +19,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepo;
+	
+	@Autowired
+	private BalanceRepository balanceRepo;
 
 	public UserServiceImpl() {
 		// TODO Auto-generated constructor stub
@@ -32,7 +39,9 @@ public class UserServiceImpl implements UserService {
 			if(userCreate==null)
 			{
 				User user = new User(name,login,password,phone);
-				return userRepo.save(user);
+				User userCreated = userRepo.save(user);
+				balanceRepo.save(new Balance(0L,LocalDateTime.now(),userCreated));
+				return userCreated;
 
 			}
 			else

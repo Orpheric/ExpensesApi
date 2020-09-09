@@ -1,6 +1,7 @@
 package com.orpheric.ExpenseRestApi.service.impl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
@@ -8,7 +9,9 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.orpheric.ExpenseRestApi.model.Balance;
 import com.orpheric.ExpenseRestApi.model.Income;
+import com.orpheric.ExpenseRestApi.repository.BalanceRepository;
 import com.orpheric.ExpenseRestApi.repository.IncomeRepository;
 import com.orpheric.ExpenseRestApi.repository.UserRepository;
 import com.orpheric.ExpenseRestApi.service.IncomeService;
@@ -22,6 +25,10 @@ public class IncomeServiceImpl implements IncomeService {
 
 	@Autowired
 	private UserRepository userRepo;
+	
+	@Autowired
+	private BalanceRepository balanceRepo;
+	
 	public IncomeServiceImpl() {
 		// TODO Auto-generated constructor stub
 	}
@@ -42,6 +49,10 @@ public class IncomeServiceImpl implements IncomeService {
 			if(userRepo.findById(userId).isPresent())
 			{
 				Income incomeCreated = new Income(title,amount,LocalDate.now(),userRepo.findById(userId).get());
+				//Save balance
+				Long latestBalance = balanceRepo.findTopByOrderByIdDesc().getAmount();
+				Balance balanceUpdated = new Balance(latestBalance+amount,LocalDateTime.now(),userRepo.findById(userId).get());
+				balanceRepo.save(balanceUpdated);
 				return incomeRepo.save(incomeCreated);
 			}
 			throw new EntityNotFoundException();

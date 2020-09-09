@@ -1,6 +1,7 @@
 package com.orpheric.ExpenseRestApi.service.impl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
@@ -8,7 +9,9 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.orpheric.ExpenseRestApi.model.Balance;
 import com.orpheric.ExpenseRestApi.model.Expense;
+import com.orpheric.ExpenseRestApi.repository.BalanceRepository;
 import com.orpheric.ExpenseRestApi.repository.ExpenseRepository;
 import com.orpheric.ExpenseRestApi.repository.UserRepository;
 import com.orpheric.ExpenseRestApi.service.ExpenseService;
@@ -21,6 +24,10 @@ public class ExpenseServiceImpl implements ExpenseService{
 	
 	@Autowired
 	private UserRepository userRepo;
+	
+	@Autowired
+	private BalanceRepository balanceRepo;
+	
 	
 	public ExpenseServiceImpl() {
 		// TODO Auto-generated constructor stub
@@ -35,6 +42,10 @@ public class ExpenseServiceImpl implements ExpenseService{
 				if(userRepo.findById(userId).isPresent())
 				{
 					Expense expenseCreated = new Expense(title,fee,LocalDate.now(),userRepo.findById(userId).get());
+					//Save balance
+					Long latestBalance = balanceRepo.findTopByOrderByIdDesc().getAmount();
+					Balance balanceUpdated = new Balance(latestBalance-fee,LocalDateTime.now(),userRepo.findById(userId).get());
+					balanceRepo.save(balanceUpdated);
 					return expenseRepo.save(expenseCreated);
 				}
 				throw new EntityNotFoundException();

@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.orpheric.ExpenseRestApi.model.Balance;
 import com.orpheric.ExpenseRestApi.model.Expense;
 import com.orpheric.ExpenseRestApi.model.Income;
 import com.orpheric.ExpenseRestApi.model.User;
 import com.orpheric.ExpenseRestApi.model.Exception.UniquePropertyDuplicatedException;
+import com.orpheric.ExpenseRestApi.service.BalanceService;
 import com.orpheric.ExpenseRestApi.service.ExpenseService;
 import com.orpheric.ExpenseRestApi.service.IncomeService;
 import com.orpheric.ExpenseRestApi.service.UserService;
@@ -37,6 +39,9 @@ public class UserController {
 	
 	@Autowired
 	ExpenseService expenseService;
+	
+	@Autowired
+	BalanceService balanceService;
 
 	@PostMapping
 	public ResponseEntity<User> createUser(@RequestBody User user)
@@ -183,6 +188,32 @@ public class UserController {
 		 catch(EntityNotFoundException e)
 		 {
 			 return new ResponseEntity<List<Expense>>(HttpStatus.NOT_FOUND);
+		 }
+		 
+		 
+	 }
+	 @GetMapping("/{id}/balances")
+	 public ResponseEntity<List<Balance>> getUserAllBalances(@PathVariable Long id)
+	 {
+		 try
+		 {
+			 if(id!=null)
+			 {
+				 List<Balance> balances = balanceService.getAllUsersBalance(id);
+				 if(balances.isEmpty())
+				 {
+					 return  new ResponseEntity<List<Balance>>(HttpStatus.NO_CONTENT);
+				 }
+				 else
+				 {
+					 return  new ResponseEntity<List<Balance>>(balances,HttpStatus.OK);
+				 }
+			 }
+			 return new ResponseEntity<List<Balance>>(HttpStatus.BAD_REQUEST);
+		 }
+		 catch(EntityNotFoundException e)
+		 {
+			 return new ResponseEntity<List<Balance>>(HttpStatus.NOT_FOUND);
 		 }
 		 
 		 
