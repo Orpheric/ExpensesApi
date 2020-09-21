@@ -1,5 +1,7 @@
  package com.orpheric.ExpenseRestApi.web;
 
+import java.util.List;
+
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,7 @@ import com.orpheric.ExpenseRestApi.model.Expense;
 import com.orpheric.ExpenseRestApi.service.ExpenseService;
 
 @RestController
-@RequestMapping("/expenses")
+@RequestMapping("/users/{userId}/expenses")
 public class ExpenseController {
 
 	@Autowired
@@ -29,7 +31,7 @@ public class ExpenseController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Expense> createExpenseMethod(@RequestBody Expense expense)
+	public ResponseEntity<Expense> createExpenseMethod(@PathVariable Long userId,@RequestBody Expense expense)
 	{
 		if(expense==null)
 		{
@@ -41,7 +43,7 @@ public class ExpenseController {
 
 
 				Expense expenseCreated = 
-						expenseService.createExpense(expense.getUser().getId(),expense.getFee(),expense.getTitle());
+						expenseService.createUserExpense(userId,expense.getFee(),expense.getTitle());
 				if(expenseCreated==null)
 				{
 					return new ResponseEntity<Expense>(HttpStatus.BAD_REQUEST);
@@ -58,14 +60,39 @@ public class ExpenseController {
 			}
 		}
 	}
-
+	 @GetMapping
+	 public ResponseEntity<List<Expense>> getUserAllExpenses(@PathVariable Long userId)
+	 {
+		 try
+		 {
+			 if(userId!=null)
+			 {
+				 List<Expense> expenses = expenseService.getAllUserExpenses(userId);
+				 if(expenses.isEmpty())
+				 {
+					 return  new ResponseEntity<List<Expense>>(HttpStatus.NO_CONTENT);
+				 }
+				 else
+				 {
+					 return  new ResponseEntity<List<Expense>>(expenses,HttpStatus.OK);
+				 }
+			 }
+			 return new ResponseEntity<List<Expense>>(HttpStatus.BAD_REQUEST);
+		 }
+		 catch(EntityNotFoundException e)
+		 {
+			 return new ResponseEntity<List<Expense>>(HttpStatus.NOT_FOUND);
+		 }
+		 
+		 
+	 }
 	@GetMapping("/{id}")
-	public ResponseEntity<Expense> getExpenseById(@PathVariable Long id)
+	public ResponseEntity<Expense> getExpenseById(@PathVariable Long userId,@PathVariable Long id)
 	{
-		if(id!=null)
+		if(id!=null && userId!=null)
 		{
 
-			Expense expense = expenseService.findExpenseById(id);
+			Expense expense = expenseService.findUserExpenseById(id, userId);
 			if(expense==null)
 			{
 				return new ResponseEntity<Expense>(HttpStatus.NO_CONTENT);
@@ -80,7 +107,7 @@ public class ExpenseController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Expense> updateExpense(@PathVariable Long id,@RequestBody Expense expense)
+	public ResponseEntity<Expense> updateExpense(@PathVariable Long id,@PathVariable Long userId,@RequestBody Expense expense)
 	{
 		if(expense==null)
 		{
@@ -91,7 +118,7 @@ public class ExpenseController {
 			try{
 
 
-				Expense expenseUpdated = expenseService.updateExpense(id,expense.getFee(),expense.getTitle());
+				Expense expenseUpdated = expenseService.updateUserExpense(userId,id,expense.getFee(),expense.getTitle());
 				if(expenseUpdated==null)
 				{
 					return new ResponseEntity<Expense>(HttpStatus.NOT_MODIFIED);
@@ -109,12 +136,12 @@ public class ExpenseController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Expense> deleteExpense(@PathVariable Long id)
+	public ResponseEntity<Expense> deleteExpense(@PathVariable Long id,@PathVariable Long userId)
 	{
-		if(id!=null)
+		if(id!=null&&userId!=null)
 		{
 			try{
-				expenseService.deleteExpense(id);
+				expenseService.deleteUserExpense(id,userId);
 				return new ResponseEntity<Expense>(HttpStatus.OK); 
 			}
 			catch(EntityNotFoundException e)

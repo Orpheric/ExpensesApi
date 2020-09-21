@@ -33,7 +33,7 @@ public class ExpenseServiceImpl implements ExpenseService{
 		// TODO Auto-generated constructor stub
 	}
 
-	public Expense createExpense(Long userId,Long fee,String title) {
+	public Expense createUserExpense(Long userId,Long fee,String title) {
 		// TODO Auto-generated method stub
 		if(userId!=null)
 		{
@@ -41,6 +41,7 @@ public class ExpenseServiceImpl implements ExpenseService{
 			{
 				if(userRepo.findById(userId).isPresent())
 				{
+					
 					Expense expenseCreated = new Expense(title,fee,LocalDate.now(),userRepo.findById(userId).get());
 					//Save balance
 					Long latestBalance = balanceRepo.findFirstByUserIdOrderByDateDesc(userId).getAmount();
@@ -55,13 +56,13 @@ public class ExpenseServiceImpl implements ExpenseService{
 		throw new EntityNotFoundException();
 	}
 
-	public Expense updateExpense(Long id,Long fee, String title) throws EntityNotFoundException{
+	public Expense updateUserExpense(Long userId,Long id,Long fee, String title) throws EntityNotFoundException{
 		// TODO Auto-generated method stud
-		if(expenseRepo.findById(id).isPresent())
+		if(expenseRepo.findByIdAndUserId(id, userId)!=null)
 		{
 			if(fee!=null)
 			{
-				Expense expenseUpdated = expenseRepo.findById(id).get();
+				Expense expenseUpdated = expenseRepo.findByIdAndUserId(id, userId);
 				expenseUpdated.setFee(fee);
 				expenseUpdated.setTitle(title);
 				return expenseRepo.save(expenseUpdated);
@@ -83,20 +84,21 @@ public class ExpenseServiceImpl implements ExpenseService{
 		return expenseRepo.findByUserId(userId);
 	}
 
-	public Expense findExpenseById(Long id) {
+	public Expense findUserExpenseById(Long id,Long userId) {
 		// TODO Auto-generated method stub
-		if(expenseRepo.findById(id).isPresent())
+		if(expenseRepo.findByIdAndUserId(id, userId)!=null)
 		{
-			return expenseRepo.findById(id).get();
+			return expenseRepo.findByIdAndUserId(id, userId);
 		}
 		return null;
 	}
 
-	public void deleteExpense(Long id) throws EntityNotFoundException {
+	public void deleteUserExpense(Long id,Long userId) throws EntityNotFoundException {
 		// TODO Auto-generated method stub
-		if(expenseRepo.findById(id).isPresent())
+		if(expenseRepo.findByIdAndUserId(id, userId)!=null)
 		{
-			expenseRepo.deleteById(id);
+			
+			expenseRepo.delete(expenseRepo.findByIdAndUserId(id, userId)); 
 		}
 		else
 		{
