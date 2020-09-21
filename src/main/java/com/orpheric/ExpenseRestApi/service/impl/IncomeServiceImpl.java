@@ -83,7 +83,7 @@ public class IncomeServiceImpl implements IncomeService {
 		// TODO Auto-generated method stub
 		if(incomeRepo.findByIdAndUserId(incomeId, userId)!=null)
 		{
-			Income income = incomeRepo.findById(incomeId).get();
+			Income income = incomeRepo.findByIdAndUserId(incomeId, userId);
 
 			incomeRepo.delete(income);
 
