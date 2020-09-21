@@ -33,15 +33,6 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
-	
-	@Autowired
-	IncomeService incomeService;
-	
-	@Autowired
-	ExpenseService expenseService;
-	
-	@Autowired
-	BalanceService balanceService;
 
 	@PostMapping
 	public ResponseEntity<User> createUser(@RequestBody User user)
@@ -141,47 +132,5 @@ public class UserController {
 
 	
 	
-	 @GetMapping("/{id}/balances")
-	 public ResponseEntity<List<Balance>> getUserAllBalances(@PathVariable Long id)
-	 {
-		 try
-		 {
-			 if(id!=null)
-			 {
-				 List<Balance> balances = balanceService.getAllUsersBalance(id);
-				 if(balances.isEmpty())
-				 {
-					 return  new ResponseEntity<List<Balance>>(HttpStatus.NO_CONTENT);
-				 }
-				 else
-				 {
-					 return  new ResponseEntity<List<Balance>>(balances,HttpStatus.OK);
-				 }
-			 }
-			 return new ResponseEntity<List<Balance>>(HttpStatus.BAD_REQUEST);
-		 }
-		 catch(EntityNotFoundException e)
-		 {
-			 return new ResponseEntity<List<Balance>>(HttpStatus.NOT_FOUND);
-		 }
-		 
-		 
-	 }
-	 
-	 @GetMapping("/{id}/balance")
-	 public ResponseEntity<Balance> getUserBalance(@PathVariable Long id)
-	 {
-		 	if(id!=null)
-			 {
-				 	Balance balance = balanceService.getLatestBalance(id);
-				 
-					 return  new ResponseEntity<Balance>(balance,HttpStatus.OK);
-				
-			 }
-			 return new ResponseEntity<Balance>(HttpStatus.BAD_REQUEST);
-		
-		 
-		 
-	 }
-
+	
 }
