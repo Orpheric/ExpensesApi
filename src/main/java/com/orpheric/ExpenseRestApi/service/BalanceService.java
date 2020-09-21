@@ -8,4 +8,5 @@ public interface BalanceService {
 		
 		public List<Balance> getAllUsersBalance(Long userId);
 		public Balance getBalance(Long id);
+		public Balance getLatestBalance(Long id);
 }

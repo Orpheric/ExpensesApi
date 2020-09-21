@@ -218,5 +218,21 @@ public class UserController {
 		 
 		 
 	 }
+	 
+	 @GetMapping("/{id}/balance")
+	 public ResponseEntity<Balance> getUserBalance(@PathVariable Long id)
+	 {
+		 	if(id!=null)
+			 {
+				 	Balance balance = balanceService.getLatestBalance(id);
+				 
+					 return  new ResponseEntity<Balance>(balance,HttpStatus.OK);
+				
+			 }
+			 return new ResponseEntity<Balance>(HttpStatus.BAD_REQUEST);
+		
+		 
+		 
+	 }
 
 }

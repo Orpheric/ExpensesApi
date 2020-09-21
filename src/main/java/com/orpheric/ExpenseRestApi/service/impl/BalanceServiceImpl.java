@@ -41,4 +41,9 @@ public class BalanceServiceImpl implements BalanceService{
 		return null;
 	}
 
+	public Balance getLatestBalance(Long id) {
+		// TODO Auto-generated method stub
+		return balanceRepo.findFirstByUserIdOrderByDateDesc(id);
+	}
+
 }

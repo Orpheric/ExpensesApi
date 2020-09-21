@@ -1,4 +1,4 @@
-package com.orpheric.ExpenseRestApi.web;
+ package com.orpheric.ExpenseRestApi.web;
 
 import javax.persistence.EntityNotFoundException;
 
