@@ -10,5 +10,5 @@ import com.orpheric.ExpenseRestApi.model.Income;
 @Repository
 public interface IncomeRepository extends JpaRepository<Income, Long>{
 	public List<Income> findByUserId(Long id);
-	
+	public Income findByIdAndUserId(Long id,Long userId);
 }

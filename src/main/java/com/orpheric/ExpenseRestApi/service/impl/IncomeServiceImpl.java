@@ -60,12 +60,12 @@ public class IncomeServiceImpl implements IncomeService {
 		}
 		return null;
 	}
-	public Income updateUserIncome(Long incomeId, Long amount, String title) throws EntityNotFoundException{
+	public Income updateUserIncome(Long userId,Long incomeId, Long amount, String title) throws EntityNotFoundException{
 		// TODO Auto-generated method stub
 
-		if(incomeRepo.findById(incomeId).isPresent())
+		if((incomeRepo.findByIdAndUserId(incomeId, userId)!=null))
 		{
-			Income income = incomeRepo.findById(incomeId).get();
+			Income income = (incomeRepo.findByIdAndUserId(incomeId, userId));
 
 			income.setAmount(amount);
 			income.setTitle(title);
@@ -79,9 +79,9 @@ public class IncomeServiceImpl implements IncomeService {
 		}
 
 	}
-	public void deleteUserIncome(Long incomeId) {
+	public void deleteUserIncome(Long incomeId,Long userId) {
 		// TODO Auto-generated method stub
-		if(incomeRepo.findById(incomeId).isPresent())
+		if(incomeRepo.findByIdAndUserId(incomeId, userId)!=null)
 		{
 			Income income = incomeRepo.findById(incomeId).get();
 
@@ -104,6 +104,16 @@ public class IncomeServiceImpl implements IncomeService {
 			return incomeRepo.findById(id).get();
 		}
 		return null;
+	}
+	public Income findUserIncomeById(Long userId, Long incomeId) {
+		// TODO Auto-generated method stub
+		if(userId==null){
+			throw new EntityNotFoundException();
+		}
+		else
+		{
+			return this.incomeRepo.findByIdAndUserId(incomeId, userId);
+		}
 	}
 }
 

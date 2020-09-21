@@ -1,5 +1,7 @@
 package com.orpheric.ExpenseRestApi.web;
 
+import java.util.List;
+
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ import com.orpheric.ExpenseRestApi.model.Income;
 import com.orpheric.ExpenseRestApi.service.IncomeService;
 
 @RestController
-@RequestMapping("/incomes")
+@RequestMapping("/users/{userId}/incomes")
 public class IncomeController {
 
 	@Autowired IncomeService incomeService;
@@ -30,11 +32,12 @@ public class IncomeController {
 	
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Income> getIncomeById(@PathVariable Long id)
+	public ResponseEntity<Income> getIncomeById(@PathVariable Long userId,@PathVariable Long id)
 	{
+		System.out.println(id);
 		if(id!=null)
 		{
-			Income income = incomeService.findIncomeById(id);
+			Income income = incomeService.findUserIncomeById(userId, id);
 			if(income!=null)
 			{
 				return new ResponseEntity<Income>(income,HttpStatus.OK);
@@ -48,8 +51,37 @@ public class IncomeController {
 		}
 
 	}
+	
+	 @GetMapping
+	 public ResponseEntity<List<Income>> getUserAllIncomes(@PathVariable Long userId)
+	 {
+		 try
+		 {
+			 if(userId!=null)
+			 {
+				 List<Income> incomes = incomeService.getAllIncomesByUserId(userId);
+				 if(incomes.isEmpty())
+				 {
+					 return  new ResponseEntity<List<Income>>(HttpStatus.NO_CONTENT);
+				 }
+				 else
+				 {
+					 return  new ResponseEntity<List<Income>>(incomes,HttpStatus.OK);
+				 }
+			 }
+			 return new ResponseEntity<List<Income>>(HttpStatus.BAD_REQUEST);
+		 }
+		 catch(EntityNotFoundException e)
+		 {
+			 return new ResponseEntity<List<Income>>(HttpStatus.NOT_FOUND);
+		 }
+		 
+		 
+	 }
+	 
+	 
 	@PostMapping
-	public ResponseEntity<Income> saveUserIncome(@RequestBody Income income)
+	public ResponseEntity<Income> saveUserIncome(@RequestBody Income income,@PathVariable Long userId)
 	{
 		try{
 			
@@ -57,7 +89,7 @@ public class IncomeController {
 		if(income!=null)
 		{
 			Income incomecreated = incomeService.saveUserIncome(
-					income.getUser().getId(),income.getAmount(), income.getTitle());
+					userId,income.getAmount(), income.getTitle());
 			if(incomecreated!=null)
 			{
 				return new ResponseEntity<Income>(incomecreated,HttpStatus.CREATED);
@@ -79,7 +111,7 @@ public class IncomeController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Income> deletingIncomeMethod(@PathVariable Long id)
+	public ResponseEntity<Income> deletingIncomeMethod(@PathVariable Long id,@PathVariable Long userId)
 	{
 		if(id==null)
 		{
@@ -88,7 +120,7 @@ public class IncomeController {
 		else
 		{
 			try{
-				incomeService.deleteUserIncome(id);
+				incomeService.deleteUserIncome(id,userId);
 				return new ResponseEntity<Income>(HttpStatus.OK);
 			}
 			catch(EntityNotFoundException e)
@@ -99,12 +131,12 @@ public class IncomeController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Income> updateIncomeInfo(@PathVariable Long id, @RequestBody Income income)
+	public ResponseEntity<Income> updateIncomeInfo(@PathVariable Long id,@PathVariable Long userId, @RequestBody Income income)
 	{
-		if(id!=null && income !=null)
+		if(id!=null && income !=null && userId!=null)
 		{
 			try{
-				Income incomeUpdated = incomeService.updateUserIncome(id, income.getAmount(), income.getTitle());
+				Income incomeUpdated = incomeService.updateUserIncome(userId,id, income.getAmount(), income.getTitle());
 				if(incomeUpdated==null){
 					return  new ResponseEntity<Income>(HttpStatus.NOT_MODIFIED);
 				}

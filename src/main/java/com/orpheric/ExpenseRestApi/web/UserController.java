@@ -139,59 +139,8 @@ public class UserController {
 		return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
 	}
 
-	 @GetMapping("/{id}/incomes")
-	 public ResponseEntity<List<Income>> getUserAllIncomes(@PathVariable Long id)
-	 {
-		 try
-		 {
-			 if(id!=null)
-			 {
-				 List<Income> incomes = incomeService.getAllIncomesByUserId(id);
-				 if(incomes.isEmpty())
-				 {
-					 return  new ResponseEntity<List<Income>>(HttpStatus.NO_CONTENT);
-				 }
-				 else
-				 {
-					 return  new ResponseEntity<List<Income>>(incomes,HttpStatus.OK);
-				 }
-			 }
-			 return new ResponseEntity<List<Income>>(HttpStatus.BAD_REQUEST);
-		 }
-		 catch(EntityNotFoundException e)
-		 {
-			 return new ResponseEntity<List<Income>>(HttpStatus.NOT_FOUND);
-		 }
-		 
-		 
-	 }
-	 
-	 @GetMapping("/{id}/expenses")
-	 public ResponseEntity<List<Expense>> getUserAllExpenses(@PathVariable Long id)
-	 {
-		 try
-		 {
-			 if(id!=null)
-			 {
-				 List<Expense> expenses = expenseService.getAllUserExpenses(id);
-				 if(expenses.isEmpty())
-				 {
-					 return  new ResponseEntity<List<Expense>>(HttpStatus.NO_CONTENT);
-				 }
-				 else
-				 {
-					 return  new ResponseEntity<List<Expense>>(expenses,HttpStatus.OK);
-				 }
-			 }
-			 return new ResponseEntity<List<Expense>>(HttpStatus.BAD_REQUEST);
-		 }
-		 catch(EntityNotFoundException e)
-		 {
-			 return new ResponseEntity<List<Expense>>(HttpStatus.NOT_FOUND);
-		 }
-		 
-		 
-	 }
+	
+	
 	 @GetMapping("/{id}/balances")
 	 public ResponseEntity<List<Balance>> getUserAllBalances(@PathVariable Long id)
 	 {
