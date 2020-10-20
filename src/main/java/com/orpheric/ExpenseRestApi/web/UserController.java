@@ -53,14 +53,14 @@ public class UserController {
 				}
 				else
 				{
-					return new ResponseEntity<User>(user,HttpStatus.CREATED);
+					return new ResponseEntity<User>(userCreate,HttpStatus.CREATED);
 				}
 
 			}
 		}
 		catch(UniquePropertyDuplicatedException e)
 		{
-			return new ResponseEntity<User>(HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<User>(HttpStatus.CONFLICT);
 		}
 	}
 
