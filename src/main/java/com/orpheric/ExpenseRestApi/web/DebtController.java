@@ -80,6 +80,27 @@ public class DebtController {
 		 return new ResponseEntity<List<Debt>>(HttpStatus.BAD_REQUEST);
 	 }
 	 
+	 @GetMapping("/{debtId}")
+	 public ResponseEntity<Debt>getDebtById(@PathVariable Long userId,@PathVariable Long debtId)
+	 {
+		 if(userId!=null&& debtId!=null)
+		 {
+			 Debt debt = debtService.findUserDebt(userId, debtId);
+			 if(debt==null)
+			 {
+				 return new ResponseEntity<Debt>(HttpStatus.NOT_FOUND);
+			 }
+			 else
+			 {
+				 return new ResponseEntity<Debt>(debt,HttpStatus.OK);
+			 }
+		 }
+		 return new ResponseEntity<Debt>(HttpStatus.BAD_REQUEST);
+		 
+	 }
+		 
+	 
+	 
 	 @PutMapping("/{debtId}")
 	 public ResponseEntity<Debt> updateUserDebtMethod(@PathVariable Long userId,@PathVariable Long debtId,@RequestBody Debt debt)
 	 {
