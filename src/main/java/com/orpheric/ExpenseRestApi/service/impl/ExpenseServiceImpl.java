@@ -90,7 +90,7 @@ public class ExpenseServiceImpl implements ExpenseService{
 		{
 			return expenseRepo.findByIdAndUserId(id, userId);
 		}
-		return null;
+		throw new EntityNotFoundException();
 	}
 
 	public void deleteUserExpense(Long id,Long userId) throws EntityNotFoundException {
