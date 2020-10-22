@@ -79,7 +79,11 @@ public class DebtServiceImpl implements DebtService{
 		{
 			debtRepo.delete(debtDelete);
 		}
-		throw new EntityNotFoundException();
+		else
+		{
+			throw new EntityNotFoundException();
+
+		}
 		
 	}
 

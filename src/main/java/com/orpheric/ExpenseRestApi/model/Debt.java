@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 @Entity
 public class Debt {
@@ -29,6 +31,7 @@ public class Debt {
 	private Long amount;
 	@Column(nullable=false)
 	private LocalDate date;
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)
 	@JoinColumn(referencedColumnName="id",name="user_id")
 	private User user;
@@ -94,6 +97,16 @@ public class Debt {
 		this.user = user;
 	}
 
+
+
+	public Long getAmount() {
+		return amount;
+	}
+
+
+	public void setAmount(Long amount) {
+		this.amount = amount;
+	}
 
 
 	public String getStatus() {
