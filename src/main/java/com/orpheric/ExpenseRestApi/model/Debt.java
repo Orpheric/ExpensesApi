@@ -26,29 +26,33 @@ public class Debt {
 	private String creditor;
 	
 	@Column(nullable=false)
+	private Long amount;
+	@Column(nullable=false)
 	private LocalDate date;
 	@ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)
 	@JoinColumn(referencedColumnName="id",name="user_id")
 	private User user;
 	private String status;
 	private LocalDate dateDue;
+
 	public Debt() {
 		// TODO Auto-generated constructor stub
 	}
 
 
-
-	public Debt(String title, String creditor, LocalDate date, User user, String status, LocalDate dateDue) {
+	public Debt(String title, String creditor, Long amount, LocalDate date, User user, String status,
+			LocalDate dateDue) {
 		super();
 		this.title = title;
 		this.creditor = creditor;
+		this.amount = amount;
 		this.date = date;
 		this.user = user;
 		this.status = status;
 		this.dateDue = dateDue;
 	}
 
-
+	
 
 	public Long getId() {
 		return id;
